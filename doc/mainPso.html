@@ -1,0 +1,314 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>mainPso</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-12-12"><meta name="DC.source" content="mainPso.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">MAINPSO</a></li><li><a href="#3">Code</a></li><li><a href="#4">PSO Parameters</a></li><li><a href="#5">Particle initialization</a></li><li><a href="#6">Iterating</a></li></ul></div><pre class="codeinput"><span class="keyword">function</span> mainPso()
+</pre><h2>MAINPSO<a name="2"></a></h2><p>Program to enhance image quality based on Particle Swarm Optimization Alghoritm.</p><div><ul><li>Syntax</li></ul></div><p>[] = MAINPSO()</p><div><ul><li>Examples:</li></ul></div><p>Provide sample usage code here</p><div><ul><li>See also:</li></ul></div><p><a href="enhanceGsclImage.html">ENHANCEGSCLIMAGE</a>, <a href="fitnessFunction.html">FITNESSFUNCTION</a></p><div><ul><li>Author: <b>Dmitrii Leliuhin</b></li><li>Email: <a href="mailto:dleliuhin@mail.ru">dleliuhin@mail.ru</a></li><li>Date: 07/12/2018 11:04:25</li><li>Version: 1.0 $</li><li>Requirements: PCWIN64, MatLab R2016a</li></ul></div><div><ul><li>Warning:</li></ul></div><div><ol><li>Warnings list.</li></ol></div><div><ul><li>TODO:</li></ul></div><div><ol><li>TODO list.</li></ol></div><h2>Code<a name="3"></a></h2><pre class="codeinput"><span class="comment">% Clear command window, workspace, plots.</span>
+clc;
+clear <span class="string">all</span>;
+close <span class="string">all</span>;
+
+<span class="comment">% Add subfolder with images.</span>
+addpath(strcat(pwd,<span class="string">'\images'</span>), <span class="string">'-end'</span>);
+</pre><h2>PSO Parameters<a name="4"></a></h2><pre class="codeinput">wmax=0.9; <span class="comment">% Maximal inertia weight.</span>
+wmin=0.4; <span class="comment">% Minimal inertia weight.</span>
+
+c1=2.5; <span class="comment">% Cognitive acceleration coefficient.</span>
+c2=1.5; <span class="comment">% Social acceleration coefficient.</span>
+
+swarmSize = 24; <span class="comment">% Population size.</span>
+localSize = 3; <span class="comment">% Local window size.</span>
+maxIterValue = 50; <span class="comment">% Maximum number of iterations.</span>
+
+<span class="comment">% Uniformly distributed generated numbers within range [0,1].</span>
+r1 = rand;
+r2 = rand;
+
+fit_val=[]; <span class="comment">% Vector for storing fitness values.</span>
+P_best=[]; <span class="comment">% Vector for storing pbest values.</span>
+G_best=[]; <span class="comment">% Vector for storing gbest values.</span>
+
+pbest = 0; <span class="comment">% Local best position of the group.</span>
+gbest = 0; <span class="comment">% Global best position of the swarm.</span>
+
+<span class="comment">% Reading specific image from subfolder.</span>
+I = imread(<span class="string">'lena.jpg'</span>);
+
+<span class="comment">% Converting original image, I, to gray scale, G.</span>
+G = rgb2gray(I);
+
+<span class="comment">% Plot images.</span>
+figure;
+imshow(I);
+title(<span class="string">'Original image'</span>, <span class="string">'fontsize'</span>, 10);
+
+figure;
+imshow(G);
+title(<span class="string">'Grayscaled image'</span>, <span class="string">'fontsize'</span>, 10);
+
+<span class="comment">% N = imnoise(G, 'salt &amp; pepper', 0.02);</span>
+<span class="comment">% figure;</span>
+<span class="comment">% imshow(N);</span>
+<span class="comment">% title('Noised image', 'fontsize', 10);</span>
+
+<span class="comment">% Get image size m*n.</span>
+[n, m] = size(I);
+</pre><img vspace="5" hspace="5" src="mainPso_01.png" style="width:320px;height:260px;" alt=""> <img vspace="5" hspace="5" src="mainPso_02.png" style="width:320px;height:260px;" alt=""> <h2>Particle initialization<a name="5"></a></h2><pre class="codeinput"><span class="keyword">for</span> i = 1:swarmSize
+    <span class="comment">% Updating optimum vales for particle position.</span>
+    a(i) = (1.5).*rand(1,1); <span class="comment">% [0, 1.5]</span>
+    b(i) = (0.5).*rand(1,1); <span class="comment">% [0, 0.5]</span>
+    c(i) = rand(1,1); <span class="comment">% [0, 1]</span>
+    k(i) = 0.5 + 1.*rand(1,1); <span class="comment">% [0.5, 1.5]</span>
+    <span class="comment">% Updating particle velocity.</span>
+    v(i) = rand; <span class="comment">% [0, 1]</span>
+    <span class="comment">% Zeros vector of current positions of i'th particle.</span>
+    x(i) = 0;
+<span class="keyword">end</span>
+</pre><h2>Iterating<a name="6"></a></h2><pre class="codeinput"><span class="keyword">for</span> i = 1:maxIterValue
+
+    <span class="comment">% Calculating inertia weight.</span>
+    w = wmax -(wmax - wmin) * i / maxIterValue;
+
+    <span class="keyword">for</span> j = 1:swarmSize
+        <span class="comment">% Generating enhanced image by transformation function.</span>
+        E = enhanceGsclImage(G, localSize, a(j), b(j), c(j), k(j));
+        <span class="comment">% Calculating fitness value.</span>
+        fitness = fitnessFunction(E, m, n);
+        <span class="comment">% Add calculated fitness value to specific vector.</span>
+        fit_val = [fit_val, fitness];
+        <span class="comment">% Get max value in the vector of fitvalues.</span>
+        maxFit = max(fit_val);
+        <span class="keyword">if</span> (fitness &lt; maxFit)
+            <span class="comment">% Calculate pbest position.</span>
+            pbest = j;
+            <span class="comment">% Add calculated pbest value to specific vector.</span>
+            P_best = [P_best, pbest];
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+    gbest = max(P_best);
+
+    <span class="keyword">for</span> j = 1:swarmSize
+        <span class="comment">% Updating velocity.</span>
+        v(j) = w*v(j) + c1.*r1.*(pbest - j) + c2.*r2.*(gbest - j);
+
+        <span class="comment">% Updating particle position.</span>
+        x(j) = x(j) + v(j);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+figure;
+imshow(E);
+title(<span class="string">'Enhanced image'</span>, <span class="string">'fontsize'</span>, 10);
+</pre><img vspace="5" hspace="5" src="mainPso_03.png" style="width:320px;height:260px;" alt=""> <pre class="codeinput"><span class="keyword">end</span>
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+function mainPso()
+%% MAINPSO 
+% Program to enhance image quality based on 
+% Particle Swarm Optimization Alghoritm.
+% 
+% * Syntax 
+%
+% [] = MAINPSO()  
+% 
+% * Examples: 
+% 
+% Provide sample usage code here
+% 
+% * See also: 
+% 
+% <enhanceGsclImage.html ENHANCEGSCLIMAGE>, 
+% <fitnessFunction.html FITNESSFUNCTION>
+% 
+% * Author: *Dmitrii Leliuhin*
+% * Email: dleliuhin@mail.ru 
+% * Date: 07/12/2018 11:04:25 
+% * Version: 1.0 $ 
+% * Requirements: PCWIN64, MatLab R2016a 
+% 
+% * Warning: 
+% 
+% # Warnings list. 
+% 
+% * TODO: 
+% 
+% # TODO list. 
+% 
+
+%% Code 
+
+% Clear command window, workspace, plots.
+clc;
+clear all;
+close all;
+
+% Add subfolder with images.
+addpath(strcat(pwd,'\images'), '-end');
+
+%% PSO Parameters
+
+wmax=0.9; % Maximal inertia weight.
+wmin=0.4; % Minimal inertia weight.
+
+c1=2.5; % Cognitive acceleration coefficient.
+c2=1.5; % Social acceleration coefficient.
+
+swarmSize = 24; % Population size.
+localSize = 3; % Local window size.
+maxIterValue = 50; % Maximum number of iterations.
+
+% Uniformly distributed generated numbers within range [0,1].
+r1 = rand;
+r2 = rand;
+
+fit_val=[]; % Vector for storing fitness values.
+P_best=[]; % Vector for storing pbest values.
+G_best=[]; % Vector for storing gbest values.
+
+pbest = 0; % Local best position of the group.
+gbest = 0; % Global best position of the swarm.
+
+% Reading specific image from subfolder.
+I = imread('lena.jpg');
+
+% Converting original image, I, to gray scale, G.
+G = rgb2gray(I);
+
+% Plot images.
+figure;
+imshow(I);
+title('Original image', 'fontsize', 10);
+
+figure;
+imshow(G);
+title('Grayscaled image', 'fontsize', 10);
+
+% N = imnoise(G, 'salt & pepper', 0.02);
+% figure;
+% imshow(N);
+% title('Noised image', 'fontsize', 10);
+
+% Get image size m*n.
+[n, m] = size(I);
+
+%% Particle initialization
+
+for i = 1:swarmSize
+    % Updating optimum vales for particle position.
+    a(i) = (1.5).*rand(1,1); % [0, 1.5]
+    b(i) = (0.5).*rand(1,1); % [0, 0.5]
+    c(i) = rand(1,1); % [0, 1]
+    k(i) = 0.5 + 1.*rand(1,1); % [0.5, 1.5]
+    % Updating particle velocity.
+    v(i) = rand; % [0, 1]
+    % Zeros vector of current positions of i'th particle.
+    x(i) = 0;
+end
+
+%% Iterating
+for i = 1:maxIterValue
+    
+    % Calculating inertia weight.
+    w = wmax -(wmax - wmin) * i / maxIterValue;
+    
+    for j = 1:swarmSize
+        % Generating enhanced image by transformation function.
+        E = enhanceGsclImage(G, localSize, a(j), b(j), c(j), k(j));
+        % Calculating fitness value.
+        fitness = fitnessFunction(E, m, n);
+        % Add calculated fitness value to specific vector.
+        fit_val = [fit_val, fitness];
+        % Get max value in the vector of fitvalues.
+        maxFit = max(fit_val);
+        if (fitness < maxFit)
+            % Calculate pbest position.
+            pbest = j;
+            % Add calculated pbest value to specific vector.
+            P_best = [P_best, pbest];
+        end
+    end
+    
+    gbest = max(P_best);
+    
+    for j = 1:swarmSize
+        % Updating velocity.
+        v(j) = w*v(j) + c1.*r1.*(pbest - j) + c2.*r2.*(gbest - j);
+        
+        % Updating particle position.
+        x(j) = x(j) + v(j);
+    end
+end
+
+figure;
+imshow(E);
+title('Enhanced image', 'fontsize', 10);
+
+end
+
+##### SOURCE END #####
+--></body></html>

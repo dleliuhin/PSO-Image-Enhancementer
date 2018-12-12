@@ -1,0 +1,156 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>fitnessFunction</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-12-12"><meta name="DC.source" content="fitnessFunction.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">FITNESSFUNCTION</a></li><li><a href="#3">Code</a></li></ul></div><pre class="codeinput"><span class="keyword">function</span> [oFit] = fitnessFunction(iE, iM, iN)
+</pre><h2>FITNESSFUNCTION<a name="2"></a></h2><p>Function to evaluate the fitness value for new position.</p><div><ul><li>Syntax</li></ul></div><p>[OFIT] = FITNESSFUNCTION(IE, IM, IN)</p><div><ul><li>Input</li></ul></div><p>-- iE - input enhanced image.</p><p>-- iM - denotes the number of columns.</p><p>-- iN - denotes the number of rows.</p><div><ul><li>Output</li></ul></div><p>-- oFit - output compted objective function which tells us about           the quality of the input enhanced image.</p><div><ul><li>Examples:</li></ul></div><p>Provide sample usage code here</p><div><ul><li>See also:</li></ul></div><p>List related files here</p><div><ul><li>Author: Dmitrii Leliuhin</li><li>Email: <a href="mailto:dleliuhin@mail.ru">dleliuhin@mail.ru</a></li><li>Date: 11/12/2018 03:52:24</li><li>Version: 1.0 $</li><li>Requirements: PCWIN64, MatLab R2016a</li></ul></div><div><ul><li>Warning:</li></ul></div><div><ol><li>Warnings list.</li></ol></div><div><ul><li>TODO:</li></ul></div><div><ol><li>TODO list.</li></ol></div><h2>Code<a name="3"></a></h2><pre class="codeinput"><span class="comment">% Gradient magnitude and direction of an input enhanced image using</span>
+<span class="comment">% Sobel gradient operator.</span>
+EGrad = imgradient(iE, <span class="string">'sobel'</span>);
+
+<span class="comment">% Calculate sum of pixel intensities (number of nonzero matrix elements).</span>
+sumIntensities = sum(sum(EGrad));
+
+<span class="comment">% Number of pixels, whose intensity value is greater than</span>
+<span class="comment">% a threshold in Sobel edge image.</span>
+numberEdgels = nnz(EGrad);
+
+<span class="comment">% Calculate Entropy of enhanced image.</span>
+entropyEnh = entropy(iE);
+
+<span class="comment">% Compute objective function which tells us about the quality of</span>
+<span class="comment">% the input enhanced image.</span>
+oFit = log(log(sumIntensities)).*(numberEdgels./(iM.*iN)).*entropyEnh;
+</pre><pre class="codeinput"><span class="keyword">end</span>
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+function [oFit] = fitnessFunction(iE, iM, iN)
+%% FITNESSFUNCTION 
+% Function to evaluate the fitness value for new position.
+% 
+% * Syntax 
+% 
+% [OFIT] = FITNESSFUNCTION(IE, IM, IN)
+% 
+% * Input 
+% 
+% REPLACE_WITH_DASH_DASH iE - input enhanced image.
+% 
+% REPLACE_WITH_DASH_DASH iM - denotes the number of columns.
+% 
+% REPLACE_WITH_DASH_DASH iN - denotes the number of rows.
+% 
+% * Output 
+% 
+% REPLACE_WITH_DASH_DASH oFit - output compted objective function which tells us about 
+%           the quality of the input enhanced image.
+% 
+% * Examples: 
+% 
+% Provide sample usage code here
+% 
+% * See also: 
+% 
+% List related files here 
+% 
+% * Author: Dmitrii Leliuhin 
+% * Email: dleliuhin@mail.ru 
+% * Date: 11/12/2018 03:52:24 
+% * Version: 1.0 $ 
+% * Requirements: PCWIN64, MatLab R2016a 
+% 
+% * Warning: 
+% 
+% # Warnings list. 
+% 
+% * TODO: 
+% 
+% # TODO list. 
+% 
+
+%% Code 
+
+% Gradient magnitude and direction of an input enhanced image using 
+% Sobel gradient operator.
+EGrad = imgradient(iE, 'sobel');
+
+% Calculate sum of pixel intensities (number of nonzero matrix elements).
+sumIntensities = sum(sum(EGrad));
+
+% Number of pixels, whose intensity value is greater than 
+% a threshold in Sobel edge image.
+numberEdgels = nnz(EGrad);
+
+% Calculate Entropy of enhanced image.
+entropyEnh = entropy(iE);
+
+% Compute objective function which tells us about the quality of 
+% the input enhanced image.
+oFit = log(log(sumIntensities)).*(numberEdgels./(iM.*iN)).*entropyEnh;
+
+end
+##### SOURCE END #####
+--></body></html>
