@@ -4,7 +4,7 @@ function [oSharpness] = getImageSharpness(iImage)
 % 
 % * Syntax 
 % 
-%	[OSHARPNESS] = GETIMAGESHARPNESS(IIMAGE)
+% [OSHARPNESS] = GETIMAGESHARPNESS(IIMAGE)
 % 
 % * Input 
 % 
