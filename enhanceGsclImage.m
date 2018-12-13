@@ -38,10 +38,10 @@ function [oEnhancedImg] = enhanceGsclImage(iGsclImg, ...
 % 
 % List related files here 
 % 
-% * Author: Dmitrii Leliuhin 
+% * Author: *Dmitrii Leliuhin*
 % * Email: dleliuhin@mail.ru 
 % * Date: 11/12/2018 02:55:41 
-% * Version: 1.0 $ 
+% * Version: 2.0 $ 
 % * Requirements: PCWIN64, MatLab R2016a 
 % 
 % * Warning: 

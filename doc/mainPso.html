@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>mainPso</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-12-12"><meta name="DC.source" content="mainPso.m"><style type="text/css">
+      --><title>mainPso</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-12-13"><meta name="DC.source" content="mainPso.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,8 +66,8 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">MAINPSO</a></li><li><a href="#3">Code</a></li><li><a href="#4">PSO Parameters</a></li><li><a href="#5">Particle initialization</a></li><li><a href="#6">Iterating</a></li></ul></div><pre class="codeinput"><span class="keyword">function</span> mainPso()
-</pre><h2>MAINPSO<a name="2"></a></h2><p>Program to enhance image quality based on Particle Swarm Optimization Alghoritm.</p><div><ul><li>Syntax</li></ul></div><p>[] = MAINPSO()</p><div><ul><li>Examples:</li></ul></div><p>Provide sample usage code here</p><div><ul><li>See also:</li></ul></div><p><a href="enhanceGsclImage.html">ENHANCEGSCLIMAGE</a>, <a href="fitnessFunction.html">FITNESSFUNCTION</a></p><div><ul><li>Author: <b>Dmitrii Leliuhin</b></li><li>Email: <a href="mailto:dleliuhin@mail.ru">dleliuhin@mail.ru</a></li><li>Date: 07/12/2018 11:04:25</li><li>Version: 1.0 $</li><li>Requirements: PCWIN64, MatLab R2016a</li></ul></div><div><ul><li>Warning:</li></ul></div><div><ol><li>Warnings list.</li></ol></div><div><ul><li>TODO:</li></ul></div><div><ol><li>TODO list.</li></ol></div><h2>Code<a name="3"></a></h2><pre class="codeinput"><span class="comment">% Clear command window, workspace, plots.</span>
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">MAINPSO</a></li><li><a href="#3">Code</a></li><li><a href="#4">PSO Parameters</a></li><li><a href="#5">Particle initialization</a></li><li><a href="#6">Iterating</a></li><li><a href="#7">Comparing images</a></li></ul></div><pre class="codeinput"><span class="keyword">function</span> mainPso()
+</pre><h2>MAINPSO<a name="2"></a></h2><p>Program to enhance image quality based on Particle Swarm Optimization Alghoritm.</p><div><ul><li>Syntax</li></ul></div><p>[] = MAINPSO()</p><div><ul><li>Examples:</li></ul></div><p>Provide sample usage code here</p><div><ul><li>See also:</li></ul></div><p><a href="enhanceGsclImage.html">ENHANCEGSCLIMAGE</a>, <a href="fitnessFunction.html">FITNESSFUNCTION</a> <a href="getImageSharpness.html">GETIMAGESHARPNESS</a></p><div><ul><li>Author: <b>Dmitrii Leliuhin</b></li><li>Email: <a href="mailto:dleliuhin@mail.ru">dleliuhin@mail.ru</a></li><li>Date: 07/12/2018 11:04:25</li><li>Version: 1.0 $</li><li>Requirements: PCWIN64, MatLab R2016a</li></ul></div><div><ul><li>Warning:</li></ul></div><div><ol><li>Warnings list.</li></ol></div><div><ul><li>TODO:</li></ul></div><div><ol><li>TODO list.</li></ol></div><h2>Code<a name="3"></a></h2><pre class="codeinput"><span class="comment">% Clear command window, workspace, plots.</span>
 clc;
 clear <span class="string">all</span>;
 close <span class="string">all</span>;
@@ -77,12 +77,12 @@ addpath(strcat(pwd,<span class="string">'\images'</span>), <span class="string">
 </pre><h2>PSO Parameters<a name="4"></a></h2><pre class="codeinput">wmax=0.9; <span class="comment">% Maximal inertia weight.</span>
 wmin=0.4; <span class="comment">% Minimal inertia weight.</span>
 
-c1=2.5; <span class="comment">% Cognitive acceleration coefficient.</span>
-c2=1.5; <span class="comment">% Social acceleration coefficient.</span>
+c1=2.4; <span class="comment">% Cognitive acceleration coefficient.</span>
+c2=1.7; <span class="comment">% Social acceleration coefficient.</span>
 
-swarmSize = 24; <span class="comment">% Population size.</span>
+swarmSize = 40; <span class="comment">% Population size.</span>
 localSize = 3; <span class="comment">% Local window size.</span>
-maxIterValue = 50; <span class="comment">% Maximum number of iterations.</span>
+maxIterValue = 150; <span class="comment">% Maximum number of iterations.</span>
 
 <span class="comment">% Uniformly distributed generated numbers within range [0,1].</span>
 r1 = rand;
@@ -129,7 +129,6 @@ title(<span class="string">'Grayscaled image'</span>, <span class="string">'font
     x(i) = 0;
 <span class="keyword">end</span>
 </pre><h2>Iterating<a name="6"></a></h2><pre class="codeinput"><span class="keyword">for</span> i = 1:maxIterValue
-
     <span class="comment">% Calculating inertia weight.</span>
     w = wmax -(wmax - wmin) * i / maxIterValue;
 
@@ -142,9 +141,15 @@ title(<span class="string">'Grayscaled image'</span>, <span class="string">'font
         fit_val = [fit_val, fitness];
         <span class="comment">% Get max value in the vector of fitvalues.</span>
         maxFit = max(fit_val);
-        <span class="keyword">if</span> (fitness &lt; maxFit)
+
+        <span class="keyword">if</span> (fitness &lt; x(j))
             <span class="comment">% Calculate pbest position.</span>
-            pbest = j;
+            pbest = x(j);
+            <span class="comment">% Add calculated pbest value to specific vector.</span>
+            P_best = [P_best, pbest];
+        <span class="keyword">else</span>
+            <span class="comment">% Calculate pbest position.</span>
+            pbest = fitness;
             <span class="comment">% Add calculated pbest value to specific vector.</span>
             P_best = [P_best, pbest];
         <span class="keyword">end</span>
@@ -154,17 +159,46 @@ title(<span class="string">'Grayscaled image'</span>, <span class="string">'font
 
     <span class="keyword">for</span> j = 1:swarmSize
         <span class="comment">% Updating velocity.</span>
-        v(j) = w*v(j) + c1.*r1.*(pbest - j) + c2.*r2.*(gbest - j);
+        v(j) = w*v(j) + c1.*r1.*(P_best(j) - x(j)) + c2.*r2.*(gbest - x(j));
 
         <span class="comment">% Updating particle position.</span>
         x(j) = x(j) + v(j);
     <span class="keyword">end</span>
+
+    P_best = [];
 <span class="keyword">end</span>
 
+<span class="comment">% Plot enhanced image</span>
 figure;
 imshow(E);
 title(<span class="string">'Enhanced image'</span>, <span class="string">'fontsize'</span>, 10);
-</pre><img vspace="5" hspace="5" src="mainPso_03.png" style="width:320px;height:260px;" alt=""> <pre class="codeinput"><span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="mainPso_03.png" style="width:320px;height:260px;" alt=""> <h2>Comparing images<a name="7"></a></h2><pre class="codeinput">fprintf(<span class="string">'Sharpness of Original image: %5.3f \n'</span>, <span class="keyword">...</span>
+        mean(getImageSharpness(I)));
+fprintf(<span class="string">'Brightness of Original image: %5.3f \n'</span>, mean2(I));
+fprintf(<span class="string">'Contrast of Original image: %5.3f \n\n'</span>, max(I(:)) - min(I(:)));
+
+fprintf(<span class="string">'Sharpness of Grayscaled image: %5.3f \n'</span>, <span class="keyword">...</span>
+        getImageSharpness(G));
+fprintf(<span class="string">'Brightness of Grayscaled image: %5.3f \n'</span>, mean2(G));
+fprintf(<span class="string">'Contrast of Grayscaled image: %5.3f \n\n'</span>, max(G(:)) - min(G(:)));
+
+fprintf(<span class="string">'Sharpness of Enhanced image: %5.3f \n'</span>, <span class="keyword">...</span>
+        getImageSharpness(E));
+fprintf(<span class="string">'Brightness of Enhanced image: %5.3f \n'</span>, mean2(E));
+fprintf(<span class="string">'Contrast of Enhanced image: %5d \n\n'</span>, max(E(:)) - min(E(:)));
+</pre><pre class="codeoutput">Sharpness of Original image: 3.098 
+Brightness of Original image: 127.915 
+Contrast of Original image: 255.000 
+
+Sharpness of Grayscaled image: 9.380 
+Brightness of Grayscaled image: 123.739 
+Contrast of Grayscaled image: 213.000 
+
+Sharpness of Enhanced image: 0.082 
+Brightness of Enhanced image: 1.143 
+Contrast of Enhanced image: 1.888147e+00 
+
+</pre><pre class="codeinput"><span class="keyword">end</span>
 </pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 function mainPso()
@@ -184,6 +218,7 @@ function mainPso()
 % 
 % <enhanceGsclImage.html ENHANCEGSCLIMAGE>, 
 % <fitnessFunction.html FITNESSFUNCTION>
+% <getImageSharpness.html GETIMAGESHARPNESS>
 % 
 % * Author: *Dmitrii Leliuhin*
 % * Email: dleliuhin@mail.ru 
@@ -215,12 +250,12 @@ addpath(strcat(pwd,'\images'), '-end');
 wmax=0.9; % Maximal inertia weight.
 wmin=0.4; % Minimal inertia weight.
 
-c1=2.5; % Cognitive acceleration coefficient.
-c2=1.5; % Social acceleration coefficient.
+c1=2.4; % Cognitive acceleration coefficient.
+c2=1.7; % Social acceleration coefficient.
 
-swarmSize = 24; % Population size.
+swarmSize = 40; % Population size.
 localSize = 3; % Local window size.
-maxIterValue = 50; % Maximum number of iterations.
+maxIterValue = 150; % Maximum number of iterations.
 
 % Uniformly distributed generated numbers within range [0,1].
 r1 = rand;
@@ -272,7 +307,6 @@ end
 
 %% Iterating
 for i = 1:maxIterValue
-    
     % Calculating inertia weight.
     w = wmax -(wmax - wmin) * i / maxIterValue;
     
@@ -285,9 +319,15 @@ for i = 1:maxIterValue
         fit_val = [fit_val, fitness];
         % Get max value in the vector of fitvalues.
         maxFit = max(fit_val);
-        if (fitness < maxFit)
+        
+        if (fitness < x(j))
             % Calculate pbest position.
-            pbest = j;
+            pbest = x(j);
+            % Add calculated pbest value to specific vector.
+            P_best = [P_best, pbest];
+        else
+            % Calculate pbest position.
+            pbest = fitness;
             % Add calculated pbest value to specific vector.
             P_best = [P_best, pbest];
         end
@@ -297,16 +337,35 @@ for i = 1:maxIterValue
     
     for j = 1:swarmSize
         % Updating velocity.
-        v(j) = w*v(j) + c1.*r1.*(pbest - j) + c2.*r2.*(gbest - j);
+        v(j) = w*v(j) + c1.*r1.*(P_best(j) - x(j)) + c2.*r2.*(gbest - x(j));
         
         % Updating particle position.
         x(j) = x(j) + v(j);
     end
+    
+    P_best = [];
 end
 
+% Plot enhanced image
 figure;
 imshow(E);
 title('Enhanced image', 'fontsize', 10);
+
+%% Comparing images
+fprintf('Sharpness of Original image: %5.3f \n', ...
+        mean(getImageSharpness(I)));
+fprintf('Brightness of Original image: %5.3f \n', mean2(I));
+fprintf('Contrast of Original image: %5.3f \n\n', max(I(:)) - min(I(:)));
+
+fprintf('Sharpness of Grayscaled image: %5.3f \n', ...
+        getImageSharpness(G));
+fprintf('Brightness of Grayscaled image: %5.3f \n', mean2(G));
+fprintf('Contrast of Grayscaled image: %5.3f \n\n', max(G(:)) - min(G(:)));
+
+fprintf('Sharpness of Enhanced image: %5.3f \n', ...
+        getImageSharpness(E));
+fprintf('Brightness of Enhanced image: %5.3f \n', mean2(E));
+fprintf('Contrast of Enhanced image: %5d \n\n', max(E(:)) - min(E(:)));
 
 end
 
