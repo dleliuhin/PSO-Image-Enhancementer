@@ -15,11 +15,12 @@ function mainPso()
 % 
 % <enhanceGsclImage.html ENHANCEGSCLIMAGE>, 
 % <fitnessFunction.html FITNESSFUNCTION>
+% <getImageSharpness.html GETIMAGESHARPNESS>
 % 
 % * Author: *Dmitrii Leliuhin*
 % * Email: dleliuhin@mail.ru 
 % * Date: 07/12/2018 11:04:25 
-% * Version: 1.0 $ 
+% * Version: 2.0 $ 
 % * Requirements: PCWIN64, MatLab R2016a 
 % 
 % * Warning: 
@@ -46,12 +47,12 @@ addpath(strcat(pwd,'\images'), '-end');
 wmax=0.9; % Maximal inertia weight.
 wmin=0.4; % Minimal inertia weight.
 
-c1=2.5; % Cognitive acceleration coefficient.
-c2=1.5; % Social acceleration coefficient.
+c1=2.4; % Cognitive acceleration coefficient.
+c2=1.7; % Social acceleration coefficient.
 
-swarmSize = 24; % Population size.
+swarmSize = 40; % Population size.
 localSize = 3; % Local window size.
-maxIterValue = 50; % Maximum number of iterations.
+maxIterValue = 150; % Maximum number of iterations.
 
 % Uniformly distributed generated numbers within range [0,1].
 r1 = rand;
@@ -101,24 +102,32 @@ for i = 1:swarmSize
     x(i) = 0;
 end
 
-%% Iterating
+%% Enhancing
 for i = 1:maxIterValue
-    
     % Calculating inertia weight.
     w = wmax -(wmax - wmin) * i / maxIterValue;
     
     for j = 1:swarmSize
         % Generating enhanced image by transformation function.
         E = enhanceGsclImage(G, localSize, a(j), b(j), c(j), k(j));
+        
         % Calculating fitness value.
         fitness = fitnessFunction(E, m, n);
+        
         % Add calculated fitness value to specific vector.
         fit_val = [fit_val, fitness];
+        
         % Get max value in the vector of fitvalues.
         maxFit = max(fit_val);
-        if (fitness < maxFit)
+        
+        if (fitness < x(j))
             % Calculate pbest position.
-            pbest = j;
+            pbest = x(j);
+            % Add calculated pbest value to specific vector.
+            P_best = [P_best, pbest];
+        else
+            % Calculate pbest position.
+            pbest = fitness;
             % Add calculated pbest value to specific vector.
             P_best = [P_best, pbest];
         end
@@ -128,15 +137,35 @@ for i = 1:maxIterValue
     
     for j = 1:swarmSize
         % Updating velocity.
-        v(j) = w*v(j) + c1.*r1.*(pbest - j) + c2.*r2.*(gbest - j);
+        v(j) = w*v(j) + c1.*r1.*(P_best(j) - x(j)) + c2.*r2.*(gbest - x(j));
         
         % Updating particle position.
         x(j) = x(j) + v(j);
     end
+    
+    P_best = [];
 end
 
+% Plot enhanced image
 figure;
 imshow(E);
 title('Enhanced image', 'fontsize', 10);
+
+%% Comparing images
+
+fprintf('Sharpness of Original image: %5.3f \n', ...
+        mean(getImageSharpness(I)));
+fprintf('Brightness of Original image: %5.3f \n', mean2(I));
+fprintf('Contrast of Original image: %5.3f \n\n', max(I(:)) - min(I(:)));
+
+fprintf('Sharpness of Grayscaled image: %5.3f \n', ...
+        getImageSharpness(G));
+fprintf('Brightness of Grayscaled image: %5.3f \n', mean2(G));
+fprintf('Contrast of Grayscaled image: %5.3f \n\n', max(G(:)) - min(G(:)));
+
+fprintf('Sharpness of Enhanced image: %5.3f \n', ...
+        getImageSharpness(E));
+fprintf('Brightness of Enhanced image: %5.3f \n', mean2(E));
+fprintf('Contrast of Enhanced image: %5d \n\n', max(E(:)) - min(E(:)));
 
 end
