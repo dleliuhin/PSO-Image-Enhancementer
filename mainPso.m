@@ -14,7 +14,7 @@ function mainPso()
 % * See also: 
 % 
 % <enhanceGsclImage.html ENHANCEGSCLIMAGE>, 
-% <fitnessFunction.html FITNESSFUNCTION>
+% <fitnessFunction.html FITNESSFUNCTION>, 
 % <getImageSharpness.html GETIMAGESHARPNESS>
 % 
 % * Author: *Dmitrii Leliuhin*
@@ -41,6 +41,7 @@ close all;
 
 % Add subfolder with images.
 addpath(strcat(pwd,'\images'), '-end');
+addpath(strcat(pwd,'\sources'), '-end');
 
 %% PSO Parameters
 
@@ -50,9 +51,9 @@ wmin=0.4; % Minimal inertia weight.
 c1=2.4; % Cognitive acceleration coefficient.
 c2=1.7; % Social acceleration coefficient.
 
-swarmSize = 40; % Population size.
+swarmSize = 24; % Population size.
 localSize = 3; % Local window size.
-maxIterValue = 150; % Maximum number of iterations.
+maxIterValue = 50; % Maximum number of iterations.
 
 % Uniformly distributed generated numbers within range [0,1].
 r1 = rand;
