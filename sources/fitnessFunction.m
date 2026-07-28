@@ -1,65 +1,34 @@
-function [oFit] = fitnessFunction(iE, iM, iN)
-%% FITNESSFUNCTION 
-% Function to evaluate the fitness value for new position.
-% 
-% * Syntax 
-% 
-% [OFIT] = FITNESSFUNCTION(IE, IM, IN)
-% 
-% * Input 
-% 
-% -- iE - input enhanced image.
-% 
-% -- iM - denotes the number of columns.
-% 
-% -- iN - denotes the number of rows.
-% 
-% * Output 
-% 
-% -- oFit - output compted objective function which tells us about 
-%           the quality of the input enhanced image.
-% 
-% * Examples: 
-% 
-% Provide sample usage code here
-% 
-% * See also: 
-% 
-% List related files here 
-% 
-% * Author: *Dmitrii Leliuhin*
-% * Email: dleliuhin@mail.ru 
-% * Date: 11/12/2018 03:52:24 
-% * Version: 2.0 $ 
-% * Requirements: PCWIN64, MatLab R2016a 
-% 
-% * Warning: 
-% 
-% # Warnings list. 
-% 
-% * TODO: 
-% 
-% # TODO list. 
-% 
+function fitness = fitnessFunction(enhancedImage, varargin)
+%FITNESSFUNCTION Score perceptual detail without a reference image.
+%   FITNESS = FITNESSFUNCTION(IMAGE) combines entropy, contrast, edge
+%   strength, and edge density, while penalizing clipped pixels.
+%
+%   The legacy FITNESSFUNCTION(IMAGE, M, N) form remains accepted; image
+%   dimensions are now derived directly from IMAGE.
 
-%% Code 
+validateattributes(enhancedImage, {'numeric', 'logical'}, ...
+    {'2d', 'nonempty', 'real', 'finite'}, mfilename, 'enhancedImage', 1);
 
-% Gradient magnitude and direction of an input enhanced image using 
-% Sobel gradient operator.
-EGrad = imgradient(iE, 'sobel');
+enhancedImage = im2double(enhancedImage);
+gradientMagnitude = imgradient(enhancedImage, 'sobel');
+maximumGradient = max(gradientMagnitude(:));
 
-% Calculate sum of pixel intensities (number of nonzero matrix elements).
-sumIntensities = sum(sum(EGrad));
+if maximumGradient > 0
+    edgeMask = gradientMagnitude > 0.10 * maximumGradient;
+else
+    edgeMask = false(size(gradientMagnitude));
+end
 
-% Number of pixels, whose intensity value is greater than 
-% a threshold in Sobel edge image.
-numberEdgels = nnz(EGrad);
+edgeStrength = mean(gradientMagnitude(:));
+edgeDensity = nnz(edgeMask) / numel(edgeMask);
+imageEntropy = entropy(enhancedImage);
+imageContrast = std(enhancedImage(:));
+clippedFraction = nnz(enhancedImage <= 0.001 | enhancedImage >= 0.999) ...
+    / numel(enhancedImage);
 
-% Calculate Entropy of enhanced image.
-entropyEnh = entropy(iE);
-
-% Compute objective function which tells us about the quality of 
-% the input enhanced image.
-oFit = log(log(sumIntensities)).*(numberEdgels./(iM.*iN)).*entropyEnh;
-
+fitness = log1p(100 * edgeStrength) ...
+    * (0.5 + edgeDensity) ...
+    * (0.5 + imageEntropy / 8) ...
+    * (0.5 + imageContrast) ...
+    * max(0.05, 1 - clippedFraction);
 end

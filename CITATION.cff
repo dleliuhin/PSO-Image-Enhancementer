@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata below."
+title: "PSO Image Enhancement"
+type: software
+version: 3.0.0
+date-released: 2026-07-28
+authors:
+  - family-names: Leliuhin
+    given-names: Dmitrii
+repository-code: "https://github.com/dleliuhin/PSO-Image-Enhancementer"
+url: "https://github.com/dleliuhin/PSO-Image-Enhancementer"
+license: MIT
