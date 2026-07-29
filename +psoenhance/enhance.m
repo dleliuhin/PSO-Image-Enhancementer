@@ -11,7 +11,7 @@ function [enhancedImage, result] = enhance(inputImage, varargin)
 %     StallIterations   positive integer, default 12
 %     ColorMode         'luminance' or 'grayscale', default 'luminance'
 %     ObjectiveMode     'weighted' or 'pareto', default 'weighted'
-%     ObjectiveWeights  four nonnegative values, default [0.25 0.20 0.15 0.40]
+%     ObjectiveWeights  four nonnegative values, default [0.15 0.15 0.10 0.60]
 %     ArchiveSize       positive integer, default 40
 %     OptimizationScale scalar in (0, 1], default 0.5
 %     DisplayProgress   logical scalar, default false
@@ -157,7 +157,7 @@ addParameter(parser, 'ColorMode', 'luminance', ...
     @(x) isTextChoice(x, {'luminance', 'grayscale'}));
 addParameter(parser, 'ObjectiveMode', 'weighted', ...
     @(x) isTextChoice(x, {'weighted', 'pareto'}));
-addParameter(parser, 'ObjectiveWeights', [0.25, 0.20, 0.15, 0.40], ...
+addParameter(parser, 'ObjectiveWeights', [0.15, 0.15, 0.10, 0.60], ...
     @isValidWeights);
 addParameter(parser, 'ArchiveSize', 40, @isPositiveInteger);
 addParameter(parser, 'OptimizationScale', 0.5, ...

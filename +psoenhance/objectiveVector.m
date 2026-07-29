@@ -6,12 +6,18 @@ detail = tanh(8 * metrics.AverageGradient) ...
 information = min(1, metrics.Entropy / 8);
 contrast = min(1, metrics.Contrast / 0.30);
 if isfinite(metrics.BrightnessShift)
-    brightnessPreservation = max(0, 1 - metrics.BrightnessShift / 0.35);
+    brightnessPreservation = exp(-12 * metrics.BrightnessShift);
 else
     brightnessPreservation = 1;
 end
-naturalness = max(0, 1 - metrics.ClippingFraction) ...
-    * (0.5 + 0.5 * brightnessPreservation);
+if isfinite(metrics.SSIM)
+    structuralPreservation = max(0, min(1, metrics.SSIM));
+else
+    structuralPreservation = 1;
+end
+naturalness = max(0, 1 - metrics.ClippingFraction) .^ 4 ...
+    * brightnessPreservation ...
+    * (0.25 + 0.75 * structuralPreservation);
 
 objectives = [detail, information, contrast, naturalness];
 end

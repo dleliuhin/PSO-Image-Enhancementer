@@ -41,8 +41,9 @@ Winning parameters are applied once to the full-resolution maps.
 ## Objective modes
 
 Weighted mode calculates a normalized compromise from four maximization
-objectives: detail, information content, contrast, and non-clipping
-naturalness.
+objectives: detail, information content, contrast, and naturalness. The last
+term penalizes clipping and brightness drift exponentially and rewards SSIM
+preservation, preventing metric-driven over-enhancement.
 
 Pareto mode keeps a bounded archive of nondominated solutions. Crowding
 distance favors leaders in less populated regions of objective space. The API
