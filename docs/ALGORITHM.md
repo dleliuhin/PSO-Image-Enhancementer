@@ -3,17 +3,16 @@
 ## Overview
 
 The enhancer searches for four parameters of a local nonlinear transform.
-Particle Swarm Optimization is useful here because the objective is
-non-differentiable and a small change in a parameter can materially change
-the transformed image.
+Particle Swarm Optimization is useful because the objective is
+non-differentiable and small parameter changes can materially change the
+output.
 
-Each particle has:
+Each particle owns a position `[a, b, c, k]`, velocity, personal-best
+position, and objective values. The swarm retains a global compromise and,
+in Pareto mode, a bounded archive of nondominated solutions.
 
-- a four-element position `[a, b, c, k]`;
-- a four-element velocity;
-- its historically best position and score.
-
-The swarm also retains the best position observed by any particle.
+For RGB input, optimization operates on CIE Lab luminance. Original chroma
+channels are retained, so color is preserved rather than discarded.
 
 ## Search space
 
@@ -26,34 +25,40 @@ The swarm also retains the best position observed by any particle.
 
 Position and velocity bounds keep the search stable. Inertia decreases
 linearly from `0.90` to `0.40`; cognitive and social coefficients are `2.05`.
-New independent random values are generated for every particle, dimension,
-and iteration.
+Independent random values are generated for every particle, dimension, and
+iteration.
 
-## Fitness
+## Cached local statistics
 
-The objective rewards:
+Local mean and standard-deviation maps do not depend on particle parameters.
+Version 3.1 computes them once at full resolution, resizes the cached maps for
+the configurable optimization scale, and reuses them for every particle.
+Winning parameters are applied once to the full-resolution maps.
 
-- mean Sobel gradient magnitude;
-- the fraction of meaningful edges;
-- entropy;
-- standard-deviation contrast.
+## Objective modes
 
-It penalizes the fraction of pixels saturated close to zero or one. All
-terms are finite for a constant image, unlike the nested logarithms used by
-the original objective.
+Weighted mode calculates a normalized compromise from four maximization
+objectives: detail, information content, contrast, and non-clipping
+naturalness.
 
-This remains a no-reference heuristic: a higher score does not guarantee
-better subjective quality for every domain. Medical, scientific, or forensic
-images require a domain-specific objective and validation.
+Pareto mode keeps a bounded archive of nondominated solutions. Crowding
+distance favors leaders in less populated regions of objective space. The API
+returns the full archive and selects one weighted compromise for the output;
+researchers can select another archive member for their application.
+
+The objective is no-reference and cannot guarantee better subjective quality
+for every domain. Medical, scientific, or forensic use requires a
+domain-specific objective and validation.
 
 ## Reproducibility
 
-`psoEnhanceImage` resets MATLAB's `twister` generator to `RandomSeed` before
-initializing the swarm. The same MATLAB release, image, options, and seed
-therefore produce the same result.
+The optimizer owns a local `RandStream` initialized from `RandomSeed`; it does
+not reset or advance MATLAB's global random stream. The same MATLAB release,
+image, options, and seed produce the same result. Benchmarks report
+distributions across multiple seeds.
 
 ## Complexity
 
-For `P` particles, `T` iterations, and an image with `N` pixels, runtime is
-approximately `O(P × T × N)`. Increasing the local window mainly changes the
-constant factor. Stall detection may stop the search before `T`.
+For `P` particles, `T` iterations, an image with `N` pixels, and optimization
+scale pixel ratio `s`, runtime is approximately `O(P × T × sN + N)`. Local
+statistics cost `O(sN + N)` rather than being recomputed `P × T` times.

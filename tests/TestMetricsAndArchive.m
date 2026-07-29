@@ -35,5 +35,15 @@ classdef TestMetricsAndArchive < matlab.unittest.TestCase
             testCase.verifySize(second, size(image));
             testCase.verifyNotEqual(first, second);
         end
+
+        function cachedStatisticsCanBeScaled(testCase)
+            statistics = psoenhance.precomputeStatistics(zeros(40, 60), 3);
+            scaled = psoenhance.scaleStatistics(statistics, 0.5);
+
+            testCase.verifySize(scaled.Image, [20, 30]);
+            testCase.verifySize(scaled.LocalMean, [20, 30]);
+            testCase.verifySize(scaled.LocalStd, [20, 30]);
+            testCase.verifyEqual(scaled.GlobalMean, statistics.GlobalMean);
+        end
     end
 end

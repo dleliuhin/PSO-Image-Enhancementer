@@ -22,14 +22,10 @@ options = parseOptions(varargin{:});
 
 [luminance, colorContext] = psoenhance.prepareImage(inputImage, ...
     options.ColorMode);
-if options.OptimizationScale < 1
-    optimizationLuminance = imresize(luminance, options.OptimizationScale, ...
-        'bilinear');
-else
-    optimizationLuminance = luminance;
-end
-statistics = psoenhance.precomputeStatistics(optimizationLuminance, ...
+outputStatistics = psoenhance.precomputeStatistics(luminance, ...
     options.LocalWindowSize);
+statistics = psoenhance.scaleStatistics(outputStatistics, ...
+    options.OptimizationScale);
 stream = RandStream('mt19937ar', 'Seed', options.RandomSeed);
 
 lowerBounds = [0.50, 0.01, 0.00, 0.50];
@@ -134,8 +130,6 @@ if strcmp(options.ObjectiveMode, 'pareto') && ~isempty(archive.Scores)
         selectCompromise(archive, options.ObjectiveWeights);
 end
 
-outputStatistics = psoenhance.precomputeStatistics(luminance, ...
-    options.LocalWindowSize);
 enhancedLuminance = psoenhance.applyTransform(outputStatistics, bestPosition);
 enhancedImage = psoenhance.restoreImage(enhancedLuminance, colorContext);
 

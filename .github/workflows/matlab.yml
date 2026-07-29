@@ -27,7 +27,7 @@ jobs:
           code-coverage-cobertura: coverage/coverage.xml
       - uses: matlab-actions/run-command@v2
         with:
-          command: addpath("examples"); generateReadmeAssets
+          command: addpath("examples"); generateReadmeAssets; buildToolbox("dist")
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -37,3 +37,4 @@ jobs:
             coverage
             benchmark-results
             docs/assets/autonomous-driving
+            dist

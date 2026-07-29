@@ -3,6 +3,29 @@
 All notable changes are documented here. This project follows
 [Semantic Versioning](https://semver.org/).
 
+## [3.1.0] - 2026-07-29
+
+### Added
+
+- Namespaced `+psoenhance` research API.
+- Weighted and bounded Pareto multi-objective optimization modes.
+- Color-preserving enhancement in CIE Lab luminance.
+- Reproducible multi-seed benchmark with four baselines and image-quality
+  metrics.
+- CC BY 4.0 autonomous-driving sample scenes and generation scripts.
+- MATLAB GitHub Actions tests, coverage, benchmark artifacts, and toolbox
+  packaging.
+- Related-research and benchmark methodology documentation.
+
+### Changed
+
+- Local image statistics are cached once instead of once per particle.
+- Optimization can run on a scaled image before applying parameters at full
+  resolution.
+- A local `RandStream` replaces mutation of MATLAB's global random state.
+- RGB input now returns enhanced RGB by default; use
+  `ColorMode='grayscale'` for the earlier behavior.
+
 ## [3.0.0] - 2026-07-28
 
 ### Added
@@ -53,7 +76,8 @@ All notable changes are documented here. This project follows
 
 - Initial documented release.
 
-[3.0.0]: https://github.com/dleliuhin/PSO-Image-Enhancementer/compare/2.1...3.0.0
-[2.1]: https://github.com/dleliuhin/PSO-Image-Enhancementer/releases/tag/2.1
-[2.0]: https://github.com/dleliuhin/PSO-Image-Enhancementer/releases/tag/2.0
-[1.0]: https://github.com/dleliuhin/PSO-Image-Enhancementer/releases/tag/1.0
+[3.1.0]: https://github.com/dleliuhin/PSO-Image-Enhancement/compare/3.0.0...3.1.0
+[3.0.0]: https://github.com/dleliuhin/PSO-Image-Enhancement/compare/2.1...3.0.0
+[2.1]: https://github.com/dleliuhin/PSO-Image-Enhancement/releases/tag/2.1
+[2.0]: https://github.com/dleliuhin/PSO-Image-Enhancement/releases/tag/2.0
+[1.0]: https://github.com/dleliuhin/PSO-Image-Enhancement/releases/tag/1.0

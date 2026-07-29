@@ -1,134 +1,168 @@
 # PSO Image Enhancement
 
-[![MATLAB](https://img.shields.io/badge/MATLAB-R2018b%2B-orange.svg)](https://www.mathworks.com/products/matlab.html)
-[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](CHANGELOG.md)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![MATLAB](https://img.shields.io/badge/MATLAB-R2024b-orange.svg)](https://www.mathworks.com/products/matlab.html)
+[![MATLAB CI](https://github.com/dleliuhin/PSO-Image-Enhancement/actions/workflows/matlab.yml/badge.svg)](https://github.com/dleliuhin/PSO-Image-Enhancement/actions/workflows/matlab.yml)
+[![Version](https://img.shields.io/badge/version-3.1.0-blue.svg)](CHANGELOG.md)
+[![License](https://img.shields.io/badge/code-MIT-green.svg)](LICENSE)
 
-Reference-free grayscale image enhancement in MATLAB using Particle Swarm
-Optimization (PSO). The optimizer searches for the parameters of a locally
-adaptive contrast transform and balances detail, entropy, contrast, and
-clipping.
+A reproducible MATLAB research toolkit for reference-free image enhancement
+with Particle Swarm Optimization (PSO). It supports grayscale and
+color-luminance processing, weighted and Pareto objectives, multi-seed
+benchmarks, standard baselines, and image-quality metrics.
 
-Version 3.0 replaces the scalar surrogate used by the original experiment
-with a genuine four-dimensional swarm. Each particle now represents
-`[a, b, c, k]`, maintains its own best position, and contributes to a
-reproducible global optimum.
+## Autonomous-driving examples
 
-## Examples
-
-| Original | Enhanced |
+| Input | Pareto PSO 3.1 |
 |:--:|:--:|
-| ![Original monkey image](docs/assets/monkey-original.jpg) | ![PSO-enhanced monkey image](docs/assets/monkey-enhanced.jpg) |
-| ![Original Lena image](docs/assets/lena-original.jpg) | ![PSO-enhanced Lena image](docs/assets/lena-enhanced.jpg) |
+| ![Dark autonomous-driving scene](examples/autonomous-driving/urban-dusk-input.jpg) | ![Enhanced autonomous-driving scene](docs/assets/autonomous-driving/urban-dusk-pso.jpg) |
+| ![Uneven illumination scene](examples/autonomous-driving/uneven-light-input.jpg) | ![Enhanced uneven illumination scene](docs/assets/autonomous-driving/uneven-light-pso.jpg) |
 
-The screenshots are retained benchmark outputs from this project's MATLAB
-experiments. Exact version 3 results are reproducible with the fixed random
-seed shown below and can vary when you select a different seed or objective.
+The front-camera scenes come from the CC BY 4.0 CARLA–nuScenes dataset.
+The second input is deterministically degraded from a retained reference.
+See [sample attribution](examples/autonomous-driving/ATTRIBUTION.md) and
+[benchmark methodology](docs/BENCHMARKING.md). Image assets are CC BY 4.0
+and are not covered by the code's MIT license.
+
+## Highlights
+
+- true four-dimensional PSO over `[a, b, c, k]`;
+- cached local statistics and reduced-resolution optimization;
+- RGB enhancement in CIE Lab luminance with original chroma preservation;
+- isolated `RandStream` without global RNG side effects;
+- weighted-objective and bounded Pareto-archive modes;
+- deterministic multi-seed benchmarking with mean and standard deviation;
+- `imadjust`, histogram equalization, and CLAHE baselines;
+- entropy, contrast, gradient, edge, clipping, fidelity, and optional
+  no-reference IQA metrics;
+- MATLAB unit tests, coverage, CI, and installable toolbox packaging.
 
 ## Requirements
 
-- MATLAB R2018b or newer
-- Image Processing Toolbox
+- MATLAB R2024b for the tested configuration;
+- Image Processing Toolbox.
 
-The implementation is platform-independent and uses `fullfile` rather than
-hard-coded path separators.
+Core enhancement remains compatible with earlier releases that provide
+`rgb2lab`, `lab2rgb`, and `RandStream`. Toolbox packaging through
+`buildToolbox` requires MATLAB R2023a or newer.
 
 ## Quick start
 
-Clone the repository, make it the current MATLAB folder, and run:
-
-```matlab
-[enhanced, result] = mainPso();
-```
-
-To enhance your own image without opening figures:
-
 ```matlab
 image = imread("my-image.jpg");
+
 [enhanced, result] = psoEnhanceImage(image, ...
+    "ObjectiveMode", "pareto", ...
     "SwarmSize", 30, ...
     "MaxIterations", 75, ...
     "LocalWindowSize", 5, ...
-    "RandomSeed", 42, ...
-    "DisplayProgress", true);
+    "OptimizationScale", 0.5, ...
+    "RandomSeed", 42);
 
 imshow(enhanced);
 disp(result.BestParameters);
+disp(result.ParetoFront.Objectives);
 ```
 
-On releases of MATLAB before string name-value syntax was introduced, use
-single quotes instead.
+`psoEnhanceImage` is the compatibility entry point.
+`psoenhance.enhance` is the namespaced research API.
 
-## API
-
-### `psoEnhanceImage`
-
-```matlab
-[enhancedImage, result] = psoEnhanceImage(inputImage, Name, Value)
-```
-
-`inputImage` may be grayscale or RGB. `enhancedImage` is a grayscale
-double-precision image in `[0, 1]`.
+## API options
 
 | Option | Default | Meaning |
 |---|---:|---|
-| `SwarmSize` | `24` | Number of particles |
-| `MaxIterations` | `50` | Optimization budget |
-| `LocalWindowSize` | `3` | Odd local-statistics window size |
-| `RandomSeed` | `42` | Seed used by MATLAB's `twister` generator |
-| `StallIterations` | `12` | Stop after this many iterations without improvement |
-| `DisplayProgress` | `false` | Print the best fitness per iteration |
+| `SwarmSize` | `24` | number of particles |
+| `MaxIterations` | `50` | maximum optimization iterations |
+| `LocalWindowSize` | `3` | odd local-statistics window |
+| `RandomSeed` | `42` | seed of the isolated local stream |
+| `StallIterations` | `12` | early-stopping patience |
+| `ColorMode` | `luminance` | preserve color or return grayscale |
+| `ObjectiveMode` | `weighted` | `weighted` or `pareto` |
+| `ObjectiveWeights` | `[.35 .25 .20 .20]` | detail, information, contrast, naturalness |
+| `ArchiveSize` | `40` | maximum Pareto archive size |
+| `OptimizationScale` | `0.5` | scale used during parameter search |
+| `DisplayProgress` | `false` | print convergence progress |
 
-The returned `result` struct contains the winning parameters and fitness,
-fitness history, actual iteration count, seed, and resolved options.
+The result struct contains the selected parameters, objectives, convergence
+history, options, seed, and full nondominated archive.
 
-### Transformation
+## Reproducible benchmark
 
-For normalized intensity `I`, local mean `m`, local standard deviation
-`sigma`, and global mean `M`, the transform is:
-
-```text
-E = (k M / (sigma + b)) (I - c m) + m^a
+```matlab
+[runs, summary] = runBenchmark( ...
+    "Seeds", 1:10, ...
+    "SwarmSize", 24, ...
+    "MaxIterations", 50);
 ```
 
-All candidates are saturated to `[0, 1]`. The optimizer maximizes a
-no-reference objective composed of Sobel edge strength and density, entropy,
-global contrast, and a penalty for clipped pixels.
+The benchmark compares the original input, `imadjust`, gamma correction,
+`histeq`, CLAHE, weighted PSO, and Pareto PSO. It writes raw and summarized
+CSV files under `benchmark-results/`.
 
-## What changed in 3.0
+The repository's compact CI benchmark uses five seeds, 16 particles, and
+30 iterations. Stochastic results are reported as mean ± standard deviation.
 
-- real four-dimensional PSO positions and velocities;
-- personal-best and global-best tracking;
-- per-particle, per-dimension random acceleration;
-- bounded positions and velocity clamping;
-- deterministic runs and stall-based early stopping;
-- stable fitness calculation for flat images;
-- correct local-window normalization for any supported window size;
-- RGB/grayscale input handling and reusable function API;
-- tests and a complete contributor/security documentation set.
+<!-- BENCHMARK_TABLE_START -->
+Benchmark results are generated by MATLAB CI and stored in
+`benchmark-results/benchmark-summary.csv`.
+<!-- BENCHMARK_TABLE_END -->
 
-See [CHANGELOG.md](CHANGELOG.md) for migration notes and
-[docs/ALGORITHM.md](docs/ALGORITHM.md) for the design rationale.
+Metric directions are not interchangeable: entropy or gradient can increase
+because of noise, while PSNR can penalize a useful contrast change. See
+[docs/BENCHMARKING.md](docs/BENCHMARKING.md) for interpretation and
+limitations.
 
-## Testing
+## Package structure
 
-From the repository root:
+```text
++psoenhance/
+  enhance.m               optimizer and public research API
+  precomputeStatistics.m  reusable image-dependent terms
+  applyTransform.m        four-parameter local transform
+  computeMetrics.m        benchmark and fidelity metrics
+  updateArchive.m         bounded nondominated archive
+  benchmark.m             baselines and multi-seed experiments
+examples/
+tests/
+```
+
+Legacy functions in `sources/` remain as compatibility wrappers.
+
+## Testing and packaging
 
 ```matlab
 results = runtests("tests");
 assertSuccess(results);
+
+toolboxFile = buildToolbox();
 ```
 
-The test suite covers output bounds, determinism, custom options, flat-image
-stability, and validation failures.
+GitHub Actions runs tests, emits JUnit and Cobertura artifacts, executes the
+compact research benchmark, and regenerates README images.
 
-## Contributing and support
+## Related research
 
-Bug reports and focused pull requests are welcome. Read
-[CONTRIBUTING.md](CONTRIBUTING.md), [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md),
-and [SECURITY.md](SECURITY.md) before participating. For scientific use,
-see [CITATION.cff](CITATION.cff).
+1. [Kennedy & Eberhart, Particle Swarm Optimization, 1995](https://doi.org/10.1109/ICNN.1995.488968)
+2. [Gorai & Ghosh, Gray-level Image Enhancement by PSO, 2009](https://doi.org/10.1109/NABIC.2009.5393603)
+3. [Ye et al., Adaptive Image Enhancement with Cuckoo Search and PSO, 2015](https://doi.org/10.1155/2015/825398)
+4. [Wan et al., PSO-based Local Entropy Weighted Histogram Equalization, 2018](https://doi.org/10.1016/j.infrared.2018.04.003)
+5. [Zhang et al., Color Image Contrast Enhancement Based on Improved PSO, 2023](https://doi.org/10.1371/journal.pone.0274054)
 
-## License
+Full citation notes and the relationship to this implementation are in
+[docs/REFERENCES.md](docs/REFERENCES.md).
 
-Released under the [MIT License](LICENSE).
+## Scientific-use note
+
+This is a research implementation, not a safety-certified perception
+component. Enhancement can amplify noise, alter photometry, or affect
+downstream detectors. Autonomous-driving, medical, scientific, and forensic
+applications require domain-specific validation.
+
+## Contributing, citation, and license
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md),
+[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md), and [SECURITY.md](SECURITY.md).
+Citation metadata is available in [CITATION.cff](CITATION.cff).
+
+MATLAB source code is released under the [MIT License](LICENSE). The
+autonomous-driving example images and derivatives are separately licensed
+under CC BY 4.0.

@@ -3,7 +3,7 @@ function [enhancedImage, result] = mainPso(imagePath)
 %   MAINPSO() enhances the bundled Lena image and displays the result.
 %
 %   [ENHANCED, RESULT] = MAINPSO(IMAGEPATH) enhances a custom image and
-%   returns both the enhanced grayscale image and optimization diagnostics.
+%   returns both the enhanced image and optimization diagnostics.
 %
 %   This function is intentionally small: use PSOENHANCEIMAGE directly for
 %   programmatic use and additional options.
@@ -38,14 +38,14 @@ subplot(1, 3, 3);
 imshow(enhancedImage);
 title(sprintf('Enhanced (fitness %.4f)', result.BestFitness));
 
-fprintf('\nPSO Image Enhancement 3.0.0\n');
+fprintf('\nPSO Image Enhancement 3.1.0\n');
 fprintf('Best parameters [a b c k]: [%.4f %.4f %.4f %.4f]\n', ...
     result.BestParameters);
 fprintf('Iterations: %d\n', result.Iterations);
 fprintf('Original sharpness: %.4f\n', getImageSharpness(grayImage));
 fprintf('Enhanced sharpness: %.4f\n', getImageSharpness(enhancedImage));
 fprintf('Original entropy: %.4f\n', entropy(grayImage));
-fprintf('Enhanced entropy: %.4f\n', entropy(enhancedImage));
+fprintf('Enhanced entropy: %.4f\n', entropy(toGrayscale(enhancedImage)));
 end
 
 function grayImage = toGrayscale(inputImage)

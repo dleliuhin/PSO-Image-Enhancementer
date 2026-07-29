@@ -1,8 +1,9 @@
 function [runs, summary] = benchmark(samples, varargin)
 %BENCHMARK Compare PSO with standard contrast-enhancement baselines.
 %   [RUNS, SUMMARY] = PSOENHANCE.BENCHMARK(SAMPLES, NAME, VALUE) evaluates
-%   Original, imadjust, histogram equalization, CLAHE, weighted PSO, and
-%   Pareto PSO. SAMPLES is a struct array with Name, InputPath, and optional
+%   Original, imadjust, gamma correction, histogram equalization, CLAHE,
+%   weighted PSO, and Pareto PSO. SAMPLES is a struct array with Name,
+%   InputPath, and optional
 %   ReferencePath fields.
 %
 %   Options:
@@ -30,7 +31,7 @@ if ~isstruct(samples) || ~all(isfield(samples, requiredFields))
 end
 
 rows = cell(0, 16);
-methods = {'Original', 'imadjust', 'histeq', 'CLAHE'};
+methods = {'Original', 'imadjust', 'Gamma-0.5', 'histeq', 'CLAHE'};
 for sampleIndex = 1:numel(samples)
     inputImage = imread(samples(sampleIndex).InputPath);
     reference = getReference(samples(sampleIndex));
@@ -89,6 +90,8 @@ end
 switch method
     case 'imadjust'
         luminance = imadjust(luminance);
+    case 'Gamma-0.5'
+        luminance = imadjust(luminance, [], [], 0.5);
     case 'histeq'
         luminance = histeq(luminance);
     case 'CLAHE'
