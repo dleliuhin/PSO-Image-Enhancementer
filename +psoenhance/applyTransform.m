@@ -13,6 +13,7 @@ if b <= 0
 end
 
 gain = (k .* statistics.GlobalMean) ./ (statistics.LocalStd + b);
+gain = min(gain, 4);
 enhanced = gain .* (statistics.Image - c .* statistics.LocalMean) ...
     + statistics.LocalMean .^ a;
 enhanced = min(max(enhanced, 0), 1);

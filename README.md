@@ -77,7 +77,7 @@ disp(result.ParetoFront.Objectives);
 | `StallIterations` | `12` | early-stopping patience |
 | `ColorMode` | `luminance` | preserve color or return grayscale |
 | `ObjectiveMode` | `weighted` | `weighted` or `pareto` |
-| `ObjectiveWeights` | `[.35 .25 .20 .20]` | detail, information, contrast, naturalness |
+| `ObjectiveWeights` | `[.25 .20 .15 .40]` | detail, information, contrast, naturalness |
 | `ArchiveSize` | `40` | maximum Pareto archive size |
 | `OptimizationScale` | `0.5` | scale used during parameter search |
 | `DisplayProgress` | `false` | print convergence progress |

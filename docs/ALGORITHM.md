@@ -18,15 +18,18 @@ channels are retained, so color is preserved rather than discarded.
 
 | Parameter | Range | Role |
 |---|---:|---|
-| `a` | `[0.50, 2.00]` | Nonlinear local-mean response |
-| `b` | `[0.01, 0.50]` | Stabilizes gain in low-variance regions |
+| `a` | `[0.50, 1.50]` | Nonlinear local-mean response |
+| `b` | `[0.02, 0.50]` | Stabilizes gain in low-variance regions |
 | `c` | `[0.00, 1.00]` | Controls subtraction of the local mean |
-| `k` | `[0.50, 2.00]` | Scales adaptive local gain |
+| `k` | `[0.50, 1.50]` | Scales adaptive local gain |
 
 Position and velocity bounds keep the search stable. Inertia decreases
 linearly from `0.90` to `0.40`; cognitive and social coefficients are `2.05`.
 Independent random values are generated for every particle, dimension, and
 iteration.
+
+Adaptive gain is capped at `4` to limit noise amplification and saturation
+in near-constant dark regions.
 
 ## Cached local statistics
 

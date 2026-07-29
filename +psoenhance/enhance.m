@@ -11,7 +11,7 @@ function [enhancedImage, result] = enhance(inputImage, varargin)
 %     StallIterations   positive integer, default 12
 %     ColorMode         'luminance' or 'grayscale', default 'luminance'
 %     ObjectiveMode     'weighted' or 'pareto', default 'weighted'
-%     ObjectiveWeights  four nonnegative values, default [0.35 0.25 0.20 0.20]
+%     ObjectiveWeights  four nonnegative values, default [0.25 0.20 0.15 0.40]
 %     ArchiveSize       positive integer, default 40
 %     OptimizationScale scalar in (0, 1], default 0.5
 %     DisplayProgress   logical scalar, default false
@@ -28,8 +28,8 @@ statistics = psoenhance.scaleStatistics(outputStatistics, ...
     options.OptimizationScale);
 stream = RandStream('mt19937ar', 'Seed', options.RandomSeed);
 
-lowerBounds = [0.50, 0.01, 0.00, 0.50];
-upperBounds = [2.00, 0.50, 1.00, 2.00];
+lowerBounds = [0.50, 0.02, 0.00, 0.50];
+upperBounds = [1.50, 0.50, 1.00, 1.50];
 parameterRange = upperBounds - lowerBounds;
 dimensions = numel(lowerBounds);
 
@@ -157,7 +157,7 @@ addParameter(parser, 'ColorMode', 'luminance', ...
     @(x) isTextChoice(x, {'luminance', 'grayscale'}));
 addParameter(parser, 'ObjectiveMode', 'weighted', ...
     @(x) isTextChoice(x, {'weighted', 'pareto'}));
-addParameter(parser, 'ObjectiveWeights', [0.35, 0.25, 0.20, 0.20], ...
+addParameter(parser, 'ObjectiveWeights', [0.25, 0.20, 0.15, 0.40], ...
     @isValidWeights);
 addParameter(parser, 'ArchiveSize', 40, @isPositiveInteger);
 addParameter(parser, 'OptimizationScale', 0.5, ...

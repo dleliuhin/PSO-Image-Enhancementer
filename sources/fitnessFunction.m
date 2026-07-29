@@ -11,5 +11,5 @@ validateattributes(enhancedImage, {'numeric', 'logical'}, ...
 
 metrics = psoenhance.computeMetrics(enhancedImage);
 objectives = psoenhance.objectiveVector(metrics);
-fitness = sum([0.35, 0.25, 0.20, 0.20] .* objectives);
+fitness = sum([0.25, 0.20, 0.15, 0.40] .* objectives);
 end

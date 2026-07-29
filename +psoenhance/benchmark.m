@@ -10,6 +10,7 @@ function [runs, summary] = benchmark(samples, varargin)
 %     Seeds          vector of nonnegative integers, default 1:10
 %     SwarmSize      positive integer, default 24
 %     MaxIterations  positive integer, default 50
+%     OptimizationScale scalar in (0, 1], default 0.35
 %     OutputDirectory directory for CSV files, default ''
 %     DisplayProgress logical scalar, default true
 
@@ -17,6 +18,8 @@ parser = inputParser;
 addParameter(parser, 'Seeds', 1:10, @isSeedVector);
 addParameter(parser, 'SwarmSize', 24, @isPositiveInteger);
 addParameter(parser, 'MaxIterations', 50, @isPositiveInteger);
+addParameter(parser, 'OptimizationScale', 0.35, ...
+    @(x) isnumeric(x) && isscalar(x) && isfinite(x) && x > 0 && x <= 1);
 addParameter(parser, 'OutputDirectory', '', ...
     @(x) ischar(x) || (isstring(x) && isscalar(x)));
 addParameter(parser, 'DisplayProgress', true, ...
@@ -41,7 +44,7 @@ for sampleIndex = 1:numel(samples)
         timer = tic;
         outputImage = applyBaseline(inputImage, method);
         elapsed = toc(timer);
-        metrics = psoenhance.computeMetrics(outputImage, reference);
+        metrics = psoenhance.computeMetrics(outputImage, reference, true);
         rows(end + 1, :) = metricRow(samples(sampleIndex).Name, method, ...
             NaN, elapsed, metrics); %#ok<AGROW>
     end
@@ -59,9 +62,10 @@ for sampleIndex = 1:numel(samples)
                 'ObjectiveMode', modes{methodIndex}, ...
                 'RandomSeed', seed, ...
                 'SwarmSize', options.SwarmSize, ...
-                'MaxIterations', options.MaxIterations);
+                'MaxIterations', options.MaxIterations, ...
+                'OptimizationScale', options.OptimizationScale);
             elapsed = toc(timer);
-            metrics = psoenhance.computeMetrics(outputImage, reference);
+            metrics = psoenhance.computeMetrics(outputImage, reference, true);
             rows(end + 1, :) = metricRow(samples(sampleIndex).Name, ...
                 psoMethods{methodIndex}, seed, elapsed, metrics); %#ok<AGROW>
         end

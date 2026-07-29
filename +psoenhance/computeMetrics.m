@@ -1,8 +1,13 @@
-function metrics = computeMetrics(image, reference)
+function metrics = computeMetrics(image, reference, includePerceptual)
 %COMPUTEMETRICS Compute enhancement, preservation, and IQA measurements.
+%   Perceptual no-reference metrics are opt-in because NIQE, BRISQUE, and
+%   PIQE are substantially more expensive than the optimization metrics.
 
 if nargin < 2
     reference = [];
+end
+if nargin < 3
+    includePerceptual = false;
 end
 if ndims(image) == 3
     evaluationImage = rgb2gray(image);
@@ -30,9 +35,15 @@ metrics = struct( ...
     'BrightnessShift', NaN, ...
     'PSNR', NaN, ...
     'SSIM', NaN, ...
-    'NIQE', optionalMetric('niqe', evaluationImage), ...
-    'BRISQUE', optionalMetric('brisque', evaluationImage), ...
-    'PIQE', optionalMetric('piqe', evaluationImage));
+    'NIQE', NaN, ...
+    'BRISQUE', NaN, ...
+    'PIQE', NaN);
+
+if includePerceptual
+    metrics.NIQE = optionalMetric('niqe', evaluationImage);
+    metrics.BRISQUE = optionalMetric('brisque', evaluationImage);
+    metrics.PIQE = optionalMetric('piqe', evaluationImage);
+end
 
 if ~isempty(reference)
     if ndims(reference) == 3
