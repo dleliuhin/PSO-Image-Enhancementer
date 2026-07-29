@@ -1,0 +1,39 @@
+name: MATLAB
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: matlab-actions/setup-matlab@v2
+        with:
+          release: R2024b
+          products: Image_Processing_Toolbox
+      - uses: matlab-actions/run-tests@v2
+        with:
+          source-folder: .
+          select-by-folder: tests
+          test-results-junit: test-results/results.xml
+          code-coverage-cobertura: coverage/coverage.xml
+      - uses: matlab-actions/run-command@v2
+        with:
+          command: addpath("examples"); generateReadmeAssets
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: matlab-test-results
+          path: |
+            test-results
+            coverage
+            benchmark-results
+            docs/assets/autonomous-driving

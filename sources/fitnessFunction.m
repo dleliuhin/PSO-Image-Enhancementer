@@ -9,26 +9,7 @@ function fitness = fitnessFunction(enhancedImage, varargin)
 validateattributes(enhancedImage, {'numeric', 'logical'}, ...
     {'2d', 'nonempty', 'real', 'finite'}, mfilename, 'enhancedImage', 1);
 
-enhancedImage = im2double(enhancedImage);
-gradientMagnitude = imgradient(enhancedImage, 'sobel');
-maximumGradient = max(gradientMagnitude(:));
-
-if maximumGradient > 0
-    edgeMask = gradientMagnitude > 0.10 * maximumGradient;
-else
-    edgeMask = false(size(gradientMagnitude));
-end
-
-edgeStrength = mean(gradientMagnitude(:));
-edgeDensity = nnz(edgeMask) / numel(edgeMask);
-imageEntropy = entropy(enhancedImage);
-imageContrast = std(enhancedImage(:));
-clippedFraction = nnz(enhancedImage <= 0.001 | enhancedImage >= 0.999) ...
-    / numel(enhancedImage);
-
-fitness = log1p(100 * edgeStrength) ...
-    * (0.5 + edgeDensity) ...
-    * (0.5 + imageEntropy / 8) ...
-    * (0.5 + imageContrast) ...
-    * max(0.05, 1 - clippedFraction);
+metrics = psoenhance.computeMetrics(enhancedImage);
+objectives = psoenhance.objectiveVector(metrics);
+fitness = sum([0.35, 0.25, 0.20, 0.20] .* objectives);
 end

@@ -15,16 +15,6 @@ if b <= 0
         'Parameter b must be greater than zero.');
 end
 
-grayImage = im2double(grayImage);
-globalMean = mean(grayImage(:));
-window = true(localSize);
-localStd = stdfilt(grayImage, window);
-kernel = ones(localSize, localSize) ./ (localSize * localSize);
-localMean = imfilter(grayImage, kernel, 'symmetric', 'same');
-
-gain = (k .* globalMean) ./ (localStd + b);
-enhancedImage = gain .* (grayImage - c .* localMean) + localMean .^ a;
-
-% Saturation is explicit so every fitness evaluation sees a valid image.
-enhancedImage = min(max(enhancedImage, 0), 1);
+statistics = psoenhance.precomputeStatistics(im2double(grayImage), localSize);
+enhancedImage = psoenhance.applyTransform(statistics, [a, b, c, k]);
 end
